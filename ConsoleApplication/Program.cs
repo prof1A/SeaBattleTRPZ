@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
+using System.Threading;
 using GameLogic;
 
 namespace ConsoleApplication
@@ -12,12 +13,12 @@ namespace ConsoleApplication
         static string playMode = "PVE";
         static string placementMode = "Automatic";
 
+
         static void Main(string[] args)
         {
+            Console.OutputEncoding = System.Text.Encoding.UTF8;
             Console.CursorVisible = false;
             Menu();
-
-
         }
 
         static void Menu()
@@ -84,7 +85,7 @@ namespace ConsoleApplication
                     }
                     else if (selected == 3)
                     {
-
+                        Controls();
                     }
                 }
             }
@@ -278,16 +279,16 @@ namespace ConsoleApplication
                             }
                         }
 
-                        foreach (var ship in f2.Ships)
-                        {
-                            if (b) break;
-                            if (ship.Points.Contains(new Point(j, i)))
-                            {
-                                Console.Write("■ ");
-                                b = true;
-                                break;
-                            }
-                        }
+                        //foreach (var ship in f2.Ships)
+                        //{
+                        //    if (b) break;
+                        //    if (ship.Points.Contains(new Point(j, i)))
+                        //    {
+                        //        Console.Write("■ ");
+                        //        b = true;
+                        //        break;
+                        //    }
+                        //}
 
                         foreach (var missed in f2.Missed)
                         {
@@ -351,6 +352,14 @@ namespace ConsoleApplication
                 else if (k == ConsoleKey.Enter)
                 {
                     success = process.MakeStep(selected, f2);
+                }
+                else if (k == ConsoleKey.R)
+                {
+                    success = process.RandomStep(f2);
+                }
+                else if (k == ConsoleKey.N)
+                {
+                    success = process.NearStep(f2);
                 }
                 else if (k == ConsoleKey.Escape)
                 {
@@ -641,5 +650,21 @@ namespace ConsoleApplication
             }
         }
 
+        static void Controls()
+        {
+            Console.ResetColor();
+            Console.Clear();
+            var text =
+                "This is a quite simple game and control are pretty obvious.\n\nWhen you are in menu just use your arrows [→][↓][←][↑] in keyboard to change option you want to choose. Then press [enter] to choose or [escape] to go back to main page.\n\nWhen you are in field constructor use the same keys as in the menu to place your ships.\n\nWhen you are finally playing the game, use arrows [→] [↓] [←] [↑] to change position of your place you want to shoot, press [enter] when you chose square.\nIf you want to shoot randomly, press [R].\nIf you want to shoot in squares near damaged ships, press[N].\n\nGood luck!";
+            text += "\n\nPress any key to continue";
+            foreach (var ch in text)
+            {
+                Console.Write(ch);
+                Thread.Sleep(10);
+            }
+
+            Console.ReadKey();
+            Menu();
+        }
     }
 }
