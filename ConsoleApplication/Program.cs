@@ -160,7 +160,11 @@ namespace ConsoleApplication
                         }
 
                         if (f2.Ships.Select(x => x.Hp).Sum() == 0)
+                        {
+                            
                             break;
+                        }
+                            
 
                     }
                     continue;
@@ -374,7 +378,7 @@ namespace ConsoleApplication
             var winner = f1.Ships.Select(x => x.Hp).Sum() > f2.Ships.Select(x => x.Hp).Sum()
                 ? "First player"
                 : "Second player";
-            Console.WriteLine($"{winner} won!");
+            Console.WriteLine($"{turn} won!");
 
             Console.ReadLine();
 
