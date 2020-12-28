@@ -4,6 +4,7 @@ using System.Drawing;
 using System.Linq;
 using System.Threading;
 using GameLogic;
+using GameLogic.Memento;
 
 namespace ConsoleApplication
 {
@@ -120,6 +121,16 @@ namespace ConsoleApplication
 
         }
 
+
+        //IMemento memento1 = new JsonMemento("C:\\Users\\CSharpSila\\Desktop\\mem.json");
+        //memento1.Save(fieldOne);
+
+        //memento1 = new XmlMemento("C:\\Users\\CSharpSila\\Desktop\\mem.xml");
+        //memento1.Save(fieldTwo);
+
+        //Console.Clear();
+        //Console.WriteLine("Saved");
+
         static void Play(Field fieldOne, Field fieldTwo)
         {
             Console.Clear();
@@ -128,6 +139,7 @@ namespace ConsoleApplication
             var f2 = fieldTwo;
 
             GameProcess process = new GameProcess();
+            process.OnWin += Save;
 
             var selected = new Point(0,0);
 
@@ -374,15 +386,32 @@ namespace ConsoleApplication
 
             }
 
+
             Console.Clear();
             var winner = f1.Ships.Select(x => x.Hp).Sum() > f2.Ships.Select(x => x.Hp).Sum()
                 ? "First player"
                 : "Second player";
             Console.WriteLine($"{turn} won!");
 
-            Console.ReadLine();
+            process.Win(fieldOne, fieldTwo);
+
+            var a = Console.ReadLine();
 
         }
+
+        static void Save(object obj, List<Field> list)
+        {
+
+            IMemento memento1 = new JsonMemento("C:\\Users\\CSharpSila\\Desktop\\mem.json");
+            memento1.Save(list[0]);
+
+            memento1 = new XmlMemento("C:\\Users\\CSharpSila\\Desktop\\mem.xml");
+            memento1.Save(list[1]);
+
+            Console.Clear();
+            Console.WriteLine("Saved");
+        }
+
         static Field CreateField(string name)
         {
             Console.Clear();

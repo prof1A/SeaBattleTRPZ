@@ -4,12 +4,18 @@ using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using GameLogic.Util;
 
 namespace GameLogic
 {
     public class GameProcess
     {
+        public event EventHandler<List<Field>> OnWin;
 
+        public void Win(Field field1, Field field2)
+        {
+            OnWin?.Invoke(this, new List<Field>{field1, field2});
+        }
         public bool MakeStep(Point point, Field field)
         {
             if (field.Damaged.Contains(point)) return false;
@@ -24,11 +30,12 @@ namespace GameLogic
 
             DamageShip(ship, field);
             field.Damaged.Add(point);
+
             return true;
 
         }
 
-        private void DamageShip(Ship ship, Field field)
+        public void DamageShip(Ship ship, Field field)
         {
             ship.Hp--;
             if (ship.Hp == 0)
@@ -42,7 +49,7 @@ namespace GameLogic
             }
             else if (ship.Hp < 0)
             {
-                throw new EncoderFallbackException();
+                throw new ShipException();
             }
         }
 

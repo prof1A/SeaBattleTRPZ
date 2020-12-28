@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 
 namespace GameLogic
 {
+    [Serializable]
     public class Field
     {
         public int Size { get; set; }

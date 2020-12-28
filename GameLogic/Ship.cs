@@ -25,5 +25,10 @@ namespace GameLogic
             this.Hp = this.Size;
             this.Points = new List<Point>();
         }
+
+        public Ship()
+        {
+            
+        }
     }
 }

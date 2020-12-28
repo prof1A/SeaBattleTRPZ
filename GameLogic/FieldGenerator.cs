@@ -16,7 +16,7 @@ namespace GameLogic
             return field;
         }
 
-        private static void RandomizeShips(Field field)
+        public static void RandomizeShips(Field field)
         {
             var shipsToPlace = CreateBlankShips();
            
@@ -77,7 +77,7 @@ namespace GameLogic
             
         }
 
-        private static ShipDirection RandomDirection()
+        public static ShipDirection RandomDirection()
         {
             Random rnd = new Random();
             int result = rnd.Next(0, 100);
