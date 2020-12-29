@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
 using GameLogic;
@@ -13,6 +14,31 @@ namespace SeaBattle.Tests
     [TestFixture]
     public class GameProcessTests
     {
+        private Field field;
+        private Ship ship;
+        private GameProcess process;
+        [SetUp]
+        public void SetUp()
+        {
+            field = FieldCreator.Create();
+
+            ship = new Ship
+            {
+                Direction = ShipDirection.Horizontal,
+                Hp = 4,
+                Size = 4,
+                Points = new List<Point>
+                {
+                    new Point(0,0),
+                    new Point(1,0),
+                    new Point(2,0),
+                    new Point(3,0)
+                }
+            };
+            FieldCreator.Place(ship, field);
+            process = new GameProcess();
+        }
+
         [Test]
         public void Win_Execute_EventInvoked()
         {
@@ -31,23 +57,6 @@ namespace SeaBattle.Tests
         [Test]
         public void MakeStep_CorrectData_ReturnedTrue()
         {
-            var field = FieldCreator.Create();
-
-            var ship = new Ship
-            {
-                Direction = ShipDirection.Horizontal,
-                Hp = 4,
-                Size = 4,
-                Points = new List<Point>
-                {
-                    new Point(0,0),
-                    new Point(1,0),
-                    new Point(2,0),
-                    new Point(3,0)
-                }
-            };
-            FieldCreator.Place(ship, field);
-            var process = new GameProcess();
 
             var result = process.MakeStep(new Point(0, 0), field);
 
@@ -58,78 +67,38 @@ namespace SeaBattle.Tests
         [Test]
         public void MakeStep_CorrectData_AddedToDamaged()
         {
-            var field = FieldCreator.Create();
-
-            var ship = new Ship
-            {
-                Direction = ShipDirection.Horizontal,
-                Hp = 4,
-                Size = 4,
-                Points = new List<Point>
-                {
-                    new Point(0,0),
-                    new Point(1,0),
-                    new Point(2,0),
-                    new Point(3,0)
-                }
-            };
-            FieldCreator.Place(ship, field);
-            var process = new GameProcess();
-
             var result = process.MakeStep(new Point(0, 0), field);
 
             Assert.AreEqual(1, field.Damaged.Count);
 
         }
 
-        [Test]
-        public void MakeStep_IncorrectData_ReturnedFalse()
+        [TestCaseSource(nameof(Points))]
+        public void MakeStep_IncorrectData_ReturnedFalse(Point point)
         {
-            var field = FieldCreator.Create();
-
-            var ship = new Ship
-            {
-                Direction = ShipDirection.Horizontal,
-                Hp = 4,
-                Size = 4,
-                Points = new List<Point>
-                {
-                    new Point(0,0),
-                    new Point(1,0),
-                    new Point(2,0),
-                    new Point(3,0)
-                }
-            };
-            FieldCreator.Place(ship, field);
-            var process = new GameProcess();
-
-            var result = process.MakeStep(new Point(5, 5), field);
+            var result = process.MakeStep(point, field);
 
             Assert.IsFalse(result);
 
         }
 
+        public static List<Point> Points()
+        {
+            var list = new List<Point>();
+            for (int i = 1; i < 10; i++)
+            {
+                for (int j = 0; j < 10; j++)
+                {
+                    list.Add(new Point(j,i));
+                }
+            }
+
+            return list;
+        }
+
         [Test]
         public void DamageShip_CorrectData_HpDecreased()
-        {
-            var field = FieldCreator.Create();
-
-            var ship = new Ship
-            {
-                Direction = ShipDirection.Horizontal,
-                Hp = 4,
-                Size = 4,
-                Points = new List<Point>
-                {
-                    new Point(0,0),
-                    new Point(1,0),
-                    new Point(2,0),
-                    new Point(3,0)
-                }
-            };
-            FieldCreator.Place(ship, field);
-            var process = new GameProcess();
-
+        { 
             process.DamageShip(ship, field);
 
             Assert.AreEqual(3, ship.Hp);
@@ -138,23 +107,7 @@ namespace SeaBattle.Tests
         [Test]
         public void DamageShip_ShipKilled_NearestSquaresMissed()
         {
-            var field = FieldCreator.Create();
-
-            var ship = new Ship
-            {
-                Direction = ShipDirection.Horizontal,
-                Hp = 1,
-                Size = 4,
-                Points = new List<Point>
-                {
-                    new Point(0,0),
-                    new Point(1,0),
-                    new Point(2,0),
-                    new Point(3,0)
-                }
-            };
-            FieldCreator.Place(ship, field);
-            var process = new GameProcess();
+            ship.Hp = 1;
 
             process.DamageShip(ship, field);
 
@@ -162,14 +115,12 @@ namespace SeaBattle.Tests
         }
 
         [Test]
-        public void DamageShip_ShipsDoesNotExist_ExceptionThrows()
+        public void DamageShip_ShipZeroHp_ExceptionThrows()
         {
-            var field = FieldCreator.Create();
-
-            var ship = new Ship();
-            var process = new GameProcess();
+            ship.Hp = 0;
 
             Assert.Throws<ShipException>(() => process.DamageShip(ship, field));
         }
+
     }
 }

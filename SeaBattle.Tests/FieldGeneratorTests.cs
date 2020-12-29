@@ -18,13 +18,25 @@ namespace SeaBattle.Tests
             Assert.AreEqual(10, f.Size);
         }
 
-        [Test]
-        public void Generate_EnterCertainSize_FieldCreatedWithCertainSize()
+        [TestCaseSource(nameof(FieldSizes))]
+        public void Generate_EnterCertainSize_FieldCreatedWithCertainSize(int size)
         {
-            var f = FieldGenerator.Generate(15);
+            var f = FieldGenerator.Generate(size);
 
             Assert.NotNull(f);
-            Assert.AreEqual(15, f.Size);
+            Assert.AreEqual(size, f.Size);
+        }
+
+        public static List<int> FieldSizes()
+        {
+            var list = new List<int>();
+
+            for (int i = 10; i < 20; i++)
+            {
+                list.Add(i);
+            }
+
+            return list;
         }
 
         [Test]
