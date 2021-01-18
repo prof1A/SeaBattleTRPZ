@@ -144,7 +144,6 @@ namespace ConsoleApplication
             var selected = new Point(0,0);
 
             var success = true;
-
             string turn = "Player1";
 
             while (true)
@@ -652,15 +651,21 @@ namespace ConsoleApplication
                     if (selected == 1)
                     {
                         Console.SetCursorPosition(3, 1);
+                        Console.Write("                                                 ");
+                        Console.SetCursorPosition(3, 1);
                         size = Convert.ToInt32(Console.ReadLine());
                     }
                     else if (selected == 2)
                     {
                         Console.SetCursorPosition(3, 3);
+                        Console.Write("                                                 ");
+                        Console.SetCursorPosition(3, 3);
                         playMode = Console.ReadLine();
                     }
                     else if (selected == 3)
                     {
+                        Console.SetCursorPosition(3, 5);
+                        Console.Write("                                                 ");
                         Console.SetCursorPosition(3, 5);
                         placementMode = Console.ReadLine();
                     }

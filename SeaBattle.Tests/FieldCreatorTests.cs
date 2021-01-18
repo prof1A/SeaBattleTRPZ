@@ -8,6 +8,14 @@ namespace SeaBattle.Tests
     [TestFixture]
     public class FieldCreatorTests
     {
+        private Field field;
+        [SetUp]
+        public void Setup()
+        {
+            field = new Field();
+            field.Size = 10;
+            field.Ships = new List<Ship>();
+        }
 
         [Test]
         public void Create_EnterNoData_CreatedFieldWithSize10()
@@ -27,10 +35,12 @@ namespace SeaBattle.Tests
             Assert.AreEqual(15, f.Size);
         }
 
+        
+
         [Test]
         public void Place_PlacedToRightPlace_ReturnedTrue()
         {
-            Field f = FieldCreator.Create(10);
+            
             var ship1 = new Ship{Direction = ShipDirection.Vertical, Hp = 4, Size = 3,Points = new List<Point>
             {
                 new Point(0,0),
@@ -39,7 +49,7 @@ namespace SeaBattle.Tests
                 new Point(0,3),
             }};
 
-            var res = FieldCreator.Place(ship1, f);
+            var res = FieldCreator.Place(ship1, field);
 
             Assert.IsTrue(res);
         }
@@ -47,7 +57,6 @@ namespace SeaBattle.Tests
         [Test]
         public void Place_PlacedToIncorrectPlace_ReturnedFalse()
         {
-            Field f = FieldCreator.Create(10);
             var ship1 = new Ship
             {
                 Direction = ShipDirection.Vertical,
@@ -74,9 +83,9 @@ namespace SeaBattle.Tests
                     new Point(0,2),
                 }
             };
-            FieldCreator.Place(ship1, f);
+            FieldCreator.Place(ship1, field);
 
-            var res = FieldCreator.Place(ship2, f);
+            var res = FieldCreator.Place(ship2, field);
 
             Assert.IsFalse(res);
 
